@@ -1,0 +1,6 @@
+# Core spring settings
+spring:
+  profiles:
+    active: test
+  main:
+    allow-bean-definition-overriding: true
