@@ -27,8 +27,21 @@ Make sure to write tests (JUnit 5 or Spock).  Create a branch for the following:
 1.  Refactor any poorly structured code you find in the Account related code. 
 1.  Fix the error handling so that the API doesn't return any 5xx responses.
 
-## Building the project
+### Building the project
     ./gradlew clean build
 
-## Running the project
+### Running the project
     ./gradlew bootRun
+
+## Submission
+Please clone the repository and create a private repository on your own account. Then, create a new branch and submit a Pull Request with your proposed solution. Make sure to add and request review on the PR of the following github users:
+- @ross-labardee
+- @miguelcdpmarques
+
+## Evaluation Criteria
+We'll be looking at the following criteria when assessing candidate submissions:
+- Project architecture
+- Code simplicity and clarity
+- Git history, including comments in the PR
+
+**Good luck!**
