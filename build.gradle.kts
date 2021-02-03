@@ -6,6 +6,7 @@ val apacheLangVersion: String by project
 plugins {
     groovy
     idea
+    java
     kotlin("jvm")
     kotlin("plugin.spring")
     id("org.springframework.boot")
@@ -64,7 +65,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-hateoas")
-    implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.flywaydb:flyway-core")
     implementation("com.opentable.components:otj-pg-embedded:0.13.0")

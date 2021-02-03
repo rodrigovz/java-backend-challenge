@@ -1,11 +1,13 @@
 package com.altruist.account;
 
+import org.springframework.stereotype.Service;
+
 import java.util.Objects;
 import java.util.UUID;
-import org.springframework.stereotype.Component;
 
-@Component
+@Service
 public class AccountSrv {
+
   private final AccountRepo accountRepo;
 
   public AccountSrv(AccountRepo accountRepo) {
@@ -15,14 +17,17 @@ public class AccountSrv {
   public UUID createAccount(AccountDto accountDto) {
     Objects.requireNonNull(accountDto.username);
     Objects.requireNonNull(accountDto.email);
+
     Account account = new Account();
     account.username = accountDto.username;
     account.email = accountDto.email;
-    account.name = accountDto.name;
-    account.street = accountDto.street;
-    account.city = accountDto.city;
-    account.state = accountDto.state;
-    account.zipcode = Integer.parseInt(accountDto.zipcode);
+
+    Address address = new Address();
+    address.name = accountDto.name;
+    address.street = accountDto.street;
+    address.city = accountDto.city;
+    address.state = State.valueOf(accountDto.state.toUpperCase());
+    address.zipcode = Integer.parseInt(accountDto.zipcode);
 
     if (null != accountDto.name ||
         null != accountDto.street ||
@@ -35,10 +40,18 @@ public class AccountSrv {
       Objects.requireNonNull(accountDto.city);
       Objects.requireNonNull(accountDto.state);
       Objects.requireNonNull(accountDto.zipcode);
-      account = accountRepo.saveAddress(account);
+      account.address = address;
     }
 
     return accountRepo.save(account)
-        .account_uuid;
+        .accountUuid;
+  }
+
+  boolean existsUsername(String username) {
+    return accountRepo.existsByUsername(username);
+  }
+
+  boolean existsEmail(String email) {
+    return accountRepo.existsByEmail(email);
   }
 }

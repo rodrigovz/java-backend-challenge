@@ -1,5 +1,5 @@
 # Core spring settings
-embedded-db:
+db:
   name: db
   schema: trade
   port: 5435
@@ -20,7 +20,7 @@ spring:
     default-property-inclusion: non_null
   datasource:
     driverClassName: "org.postgresql.Driver"
-    url: jdbc:postgresql://localhost:${embedded-db.port}/${embedded-db.name}?currentSchema=${embedded-db.schema}
+    url: jdbc:postgresql://localhost:${db.port}/${db.name}?currentSchema=${db.schema}
     username: postgres
     password:
     hikari:
@@ -30,7 +30,7 @@ spring:
       idleTimeout: 30000
   flyway:
     schemas:
-      - ${embedded-db.schema}
+      - ${db.schema}
     enabled: true
     mixed: true
 http:
