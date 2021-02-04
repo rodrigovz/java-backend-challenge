@@ -47,11 +47,15 @@ public class AccountSrv {
         .accountUuid;
   }
 
-  boolean existsUsername(String username) {
+  public boolean existsUsername(String username) {
     return accountRepo.existsByUsername(username);
   }
 
-  boolean existsEmail(String email) {
+  public boolean existsEmail(String email) {
     return accountRepo.existsByEmail(email);
+  }
+
+  public Account findAccount(UUID accountUuid) {
+    return accountRepo.findByAccountUuid(accountUuid);
   }
 }
