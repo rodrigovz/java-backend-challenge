@@ -1,15 +1,11 @@
 package com.altruist.trade;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Data
 public class TradeRequestDto {
@@ -24,9 +20,9 @@ public class TradeRequestDto {
   @Positive(message = "Price must be greater than zero")
   public BigDecimal price;
 
-  @NotBlank(message = "Side is mandatory")
-  public String side;
+  @NotNull(message = "Side is mandatory")
+  public TradeSide side;
 
-  @NotBlank(message = "Status is mandatory")
-  public String status;
+  @NotNull(message = "Status is mandatory")
+  public TradeStatus status;
 }

@@ -36,7 +36,7 @@ class AccountRepoTest extends Specification {
         )
 
         when:
-        repo.save(account)
+        account = repo.save(account)
 
         then: "the account id and address id are returned"
         account.accountUuid

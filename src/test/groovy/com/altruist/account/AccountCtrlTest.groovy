@@ -1,7 +1,9 @@
 package com.altruist.account
 
+import com.altruist.core.snippets.AccountSnippetsFactory
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
@@ -13,10 +15,20 @@ import spock.mock.DetachedMockFactory
 
 import static org.hamcrest.Matchers.containsString
 import static org.springframework.http.MediaType.APPLICATION_JSON
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 @WebMvcTest(controllers = [AccountCtrl])
+@AutoConfigureRestDocs
 class AccountCtrlTest extends Specification {
     @Autowired
     MockMvc mvc
@@ -26,6 +38,8 @@ class AccountCtrlTest extends Specification {
 
     @Autowired
     AccountSrv mockAccountSrv
+
+    private AccountSnippetsFactory snippetPathFactory = new AccountSnippetsFactory()
 
     def "Should accept account requests"() {
         given: "an account request"
@@ -58,6 +72,19 @@ class AccountCtrlTest extends Specification {
         results.andExpect(header().exists("Location"))
                 .andExpect(header().string("Location", containsString("/accounts/$expectedId")))
         results.andExpect(content().json("""{"id":"$expectedId"}"""))
+
+        and: "generate docs"
+        results.andDo(document(snippetPathFactory.create("1.0.0", 'post-success'),
+                requestFields(
+                        fieldWithPath("username").description("Required. Account's username"),
+                        fieldWithPath("email").description("Required. Account's email"),
+                        fieldWithPath("name").description("Name"),
+                        fieldWithPath("street").description("Street"),
+                        fieldWithPath("city").description("City"),
+                        fieldWithPath("state").description("Two letters State code"),
+                        fieldWithPath("zipcode").description("Postal code")),
+                responseFields(
+                        fieldWithPath("id").description("Id of the Account"))))
     }
 
     @Unroll
@@ -86,6 +113,9 @@ class AccountCtrlTest extends Specification {
 
         and: "expect an error message"
         results.andExpect(jsonPath(field).value(error))
+
+        and: "generate docs"
+        results.andDo(document(snippetPathFactory.create("1.0.0", 'post-bad-requests')))
 
         where:
         username      | email               | field        | error
@@ -123,6 +153,9 @@ class AccountCtrlTest extends Specification {
 
         and: "expect an error message"
         results.andExpect(jsonPath('$.error').value("Email already exists"))
+
+        and: "generate docs"
+        results.andDo(document(snippetPathFactory.create("1.0.0", 'post-conflict-existing-email')))
     }
 
     def "Should validate existing user"() {
@@ -154,6 +187,9 @@ class AccountCtrlTest extends Specification {
 
         and: "expect an error message"
         results.andExpect(jsonPath('$.error').value("Username already exists"))
+
+        and: "generate docs"
+        results.andDo(document(snippetPathFactory.create("1.0.0", 'post-conflict-existing-user')))
     }
 
     @TestConfiguration

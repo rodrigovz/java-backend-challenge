@@ -1,0 +1,27 @@
+==== Path Params
+
+include::{snippets}/trade/1.0.0/post-success/path-parameters.adoc[]
+
+==== Requests Fields
+
+include::{snippets}/trade/1.0.0/post-success/request-fields.adoc[]
+
+==== Request
+
+include::{snippets}/trade/1.0.0/post-success/http-request.adoc[]
+
+==== Response Fields
+
+include::{snippets}/trade/1.0.0/post-success/response-fields.adoc[]
+
+==== Success
+
+include::{snippets}/trade/1.0.0/post-success/http-response.adoc[]
+
+==== Missing fields
+
+include::{snippets}/trade/1.0.0/post-bad-requests/http-response.adoc[]
+
+==== Account doesn't exist
+
+include::{snippets}/trade/1.0.0/post-missing-account/http-response.adoc[]

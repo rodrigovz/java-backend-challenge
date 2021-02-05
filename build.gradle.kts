@@ -12,6 +12,7 @@ plugins {
     id("org.springframework.boot")
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("org.flywaydb.flyway") version "6.5.5"
+    id("org.asciidoctor.convert") version "1.5.6"
 }
 
 group = "com.altruist"
@@ -34,6 +35,17 @@ configurations {
 tasks.withType(Test::class.java).all {
     this.include("**/*Test.*")
     this.exclude("**/*TestBase.*", "**/*IntegrationTest.*")
+}
+
+tasks.withType<org.asciidoctor.gradle.AsciidoctorTask>().configureEach {
+    setSourceDir(file("src/doc/asciidoc"))
+    setOutputDir(file("target/api-guide"))
+    attributes(
+        mapOf(
+            "snippets" to file("build/generated-snippets"),
+            "includedir" to file("src/doc/asciidoc")
+        )
+    )
 }
 
 tasks {

@@ -1,0 +1,27 @@
+= API Guide
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:sectlinks:
+
+[[overview]]
+== Overview
+This guide describes the main endpoints implemented in this project.
+
+=== Create Account
+
+include::{includedir}/inc/account-post.adoc[]
+
+=== Create Trade
+
+include::{includedir}/inc/trade-post.adoc[]
+
+=== Get Trade
+
+include::{includedir}/inc/trade-get.adoc[]
+
+=== Update Trade Status
+
+include::{includedir}/inc/trade-patch.adoc[]
