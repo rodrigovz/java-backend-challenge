@@ -1,6 +1,8 @@
-package com.altruist.trade;
+package com.altruist.trade.dto;
 
 import com.altruist.account.Account;
+import com.altruist.trade.TradeSide;
+import com.altruist.trade.TradeStatus;
 import lombok.Data;
 
 import java.math.BigDecimal;

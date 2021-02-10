@@ -1,6 +1,8 @@
 package com.altruist.trade
 
 import com.altruist.account.Account
+import com.altruist.trade.dto.TradeDto
+import com.altruist.trade.dto.TradeResponseDto
 import spock.lang.Specification
 
 class TradeSrvTest extends Specification {

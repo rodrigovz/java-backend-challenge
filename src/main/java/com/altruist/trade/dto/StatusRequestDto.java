@@ -1,5 +1,6 @@
-package com.altruist.trade;
+package com.altruist.trade.dto;
 
+import com.altruist.trade.TradeStatus;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;

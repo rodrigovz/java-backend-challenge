@@ -4,6 +4,10 @@ import com.altruist.account.Account
 import com.altruist.account.AccountRepo
 import com.altruist.account.AccountSrv
 import com.altruist.core.snippets.TradeSnippetsFactory
+import com.altruist.trade.dto.StatusRequestDto
+import com.altruist.trade.dto.TradeDto
+import com.altruist.trade.dto.TradeRequestDto
+import com.altruist.trade.dto.TradeResponseDto
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
@@ -23,6 +27,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.*
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 @WebMvcTest(controllers = [TradeCtrl])
@@ -240,6 +245,7 @@ class TradeCtrlTest extends Specification {
 
         and: 'a TradeResponseDto'
         TradeResponseDto responseDto = new TradeResponseDto(
+                tradeUuid: tradeId as String,
                 quantity: 3,
                 price: "3.56",
                 side: TradeSide.BUY.toString(),
@@ -265,6 +271,7 @@ class TradeCtrlTest extends Specification {
         results.andExpect(status().isOk())
 
         and: "expect response body"
+        results.andExpect(jsonPath('$.tradeUuid').value(tradeId as String))
         results.andExpect(jsonPath('$.symbol').value("GOOG"))
         results.andExpect(jsonPath('$.quantity').value(3))
         results.andExpect(jsonPath('$.price').value("3.56"))
@@ -278,6 +285,7 @@ class TradeCtrlTest extends Specification {
                         parameterWithName("accountId").description("Account Id"),
                         parameterWithName("tradeId").description("Trade Id")),
                 responseFields(
+                        fieldWithPath("tradeUuid").description("Id of the Trade"),
                         fieldWithPath("symbol").description("Symbol of the Trade"),
                         fieldWithPath("quantity").description("Number of trades"),
                         fieldWithPath("price").description("Price of the Trade"),
@@ -326,6 +334,125 @@ class TradeCtrlTest extends Specification {
 
         and: "generate docs"
         results.andDo(document(snippetPathFactory.create("1.0.0", 'get-tradeId-not-found')))
+    }
+
+    def "Should accept get trades requests"() {
+        given: "an account"
+        Account account = new Account()
+        UUID accountId = UUID.randomUUID()
+        account.accountUuid = accountId
+
+        and: 'a list of TradeResponseDto'
+        TradeResponseDto responseDto1 = new TradeResponseDto(
+                tradeUuid: UUID.randomUUID() as String,
+                quantity: 3,
+                price: "3.56",
+                side: TradeSide.BUY.toString(),
+                status: TradeStatus.SUBMITTED.toString(),
+                symbol: "GOOG",
+                accountId: accountId as String
+        )
+
+        TradeResponseDto responseDto2 = new TradeResponseDto(
+                tradeUuid: UUID.randomUUID() as String,
+                quantity: 6,
+                price: "9.57",
+                side: TradeSide.SELL.toString(),
+                status: TradeStatus.CANCELLED.toString(),
+                symbol: "APPL",
+                accountId: accountId as String
+        )
+        List<TradeRequestDto> listResponseDto = [responseDto1, responseDto2]
+
+        and: 'page and size'
+        int page = 0
+        int size = 10
+
+        when: "the request is submitted"
+        ResultActions results = mvc.perform(get('/accounts/{accountId}/trades?page={page}&size={size}',
+                accountId, page, size)
+                .header("Accept-Version", "1.0.0")
+                .contentType(APPLICATION_JSON)
+        )
+
+        then: "an account is found"
+        1 * mockAccountSrv.findAccount(accountId) >> account
+
+        and: "a list of tradesDto is returned"
+        1 * mockTradeSrv.listTradesByAccount(account, page, size) >> listResponseDto
+
+        and: "expect ok response"
+        results.andExpect(status().isOk())
+
+        and: 'check result length'
+        results.andExpect(jsonPath('$.result.length()').value(2))
+
+        and: "expect response body"
+        results.andExpect(jsonPath('$.result[0].tradeUuid').value(listResponseDto[0].tradeUuid))
+        results.andExpect(jsonPath('$.result[0].symbol').value(listResponseDto[0].symbol))
+        results.andExpect(jsonPath('$.result[0].quantity').value(listResponseDto[0].quantity))
+        results.andExpect(jsonPath('$.result[0].price').value(listResponseDto[0].price))
+        results.andExpect(jsonPath('$.result[0].side').value(listResponseDto[0].side))
+        results.andExpect(jsonPath('$.result[0].status').value(listResponseDto[0].status))
+        results.andExpect(jsonPath('$.result[0].accountId').value(listResponseDto[0].accountId))
+
+        results.andExpect(jsonPath('$.result[1].tradeUuid').value(listResponseDto[1].tradeUuid))
+        results.andExpect(jsonPath('$.result[1].symbol').value(listResponseDto[1].symbol))
+        results.andExpect(jsonPath('$.result[1].quantity').value(listResponseDto[1].quantity))
+        results.andExpect(jsonPath('$.result[1].price').value(listResponseDto[1].price))
+        results.andExpect(jsonPath('$.result[1].side').value(listResponseDto[1].side))
+        results.andExpect(jsonPath('$.result[1].status').value(listResponseDto[1].status))
+        results.andExpect(jsonPath('$.result[1].accountId').value(listResponseDto[1].accountId))
+
+        and: "generate docs"
+        results.andDo(document(snippetPathFactory.create("1.0.0", 'list-success'),
+                pathParameters(
+                        parameterWithName("accountId").description("Account Id")),
+                requestParameters(
+                        parameterWithName("page").description("Page number. Starts from 0. Default is 0"),
+                        parameterWithName("size").description("Page size. Default is 50")
+                ),
+                responseFields(
+                        fieldWithPath("result[]").description("A list of trades"),
+                        fieldWithPath("result[].tradeUuid").description("Id of the Trade"),
+                        fieldWithPath("result[].symbol").description("Symbol of the Trade"),
+                        fieldWithPath("result[].quantity").description("Number of trades"),
+                        fieldWithPath("result[].price").description("Price of the Trade"),
+                        fieldWithPath("result[].side").description("Possible values: buy, sell"),
+                        fieldWithPath("result[].status").description("Possible values: submitted, cancelled, completed, failed"),
+                        fieldWithPath("result[].accountId").description("Trade's account id")
+                )
+        ))
+    }
+
+    def "Should validate account not found for list trades requests"() {
+        given: "an account"
+        Account account = new Account()
+        UUID accountId = UUID.randomUUID()
+        account.accountUuid = accountId
+
+        and: 'page and size'
+        int page = 0
+        int size = 10
+
+        when: "the request is submitted"
+        ResultActions results = mvc.perform(get('/accounts/{accountId}/trades?page={page}&size={size}',
+                accountId, page, size)
+                .header("Accept-Version", "1.0.0")
+                .contentType(APPLICATION_JSON)
+        )
+
+        then: "account is not found"
+        1 * mockAccountSrv.findAccount(accountId) >> null
+
+        and: "expect not found response"
+        results.andExpect(status().isNotFound())
+
+        and: "expect an error message"
+        results.andExpect(jsonPath('$.error').value('AccountId not found'))
+
+        and: "generate docs"
+        results.andDo(document(snippetPathFactory.create("1.0.0", 'list-accountId-not-found')))
     }
 
     def "Should accept patch trade requests"() {

@@ -4,6 +4,7 @@ import com.altruist.account.Account;
 import com.altruist.account.AccountSrv;
 import com.altruist.core.IdDto;
 import com.altruist.core.SingleErrorResponseDto;
+import com.altruist.trade.dto.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -62,7 +63,7 @@ public class TradeCtrl {
   @GetMapping(value = "/{tradeId}",
           produces = APPLICATION_JSON_VALUE,
           headers = "Accept-Version=1.0.0")
-  public @ResponseBody ResponseEntity get(
+  public @ResponseBody ResponseEntity getTrade(
           @PathVariable("accountId") UUID accountId,
           @PathVariable("tradeId") UUID tradeId,
           HttpServletRequest httpServletRequest
@@ -83,11 +84,32 @@ public class TradeCtrl {
     return ResponseEntity.ok(tradeResponseDto);
   }
 
+  @GetMapping(produces = APPLICATION_JSON_VALUE,
+          headers = "Accept-Version=1.0.0")
+  public @ResponseBody ResponseEntity listTrades(
+          @PathVariable("accountId") UUID accountId,
+          @RequestParam(name = "page", defaultValue = "0") int page,
+          @RequestParam(name = "size", defaultValue = "50") int size,
+          HttpServletRequest httpServletRequest
+  ) throws URISyntaxException {
+    log.info("Received request to list trades for account id {}", accountId);
+
+    Account account = accountSrv.findAccount(accountId);
+    if (account == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND)
+              .body(new SingleErrorResponseDto("AccountId not found"));
+    }
+
+    TradeListResponseDto tradeListResponseDto = new TradeListResponseDto();
+    tradeListResponseDto.result = tradeSrv.listTradesByAccount(account, page, size);
+    return ResponseEntity.ok(tradeListResponseDto);
+  }
+
   @PatchMapping(value = "/{tradeId}",
           consumes = APPLICATION_JSON_VALUE,
           produces = APPLICATION_JSON_VALUE,
           headers = "Accept-Version=1.0.0")
-  public @ResponseBody ResponseEntity patch(
+  public @ResponseBody ResponseEntity patchStatus(
           @RequestBody @Valid StatusRequestDto statusRequestDto,
           @PathVariable("accountId") UUID accountId,
           @PathVariable("tradeId") UUID tradeId,

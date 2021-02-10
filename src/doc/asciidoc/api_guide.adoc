@@ -18,6 +18,10 @@ include::{includedir}/inc/account-post.adoc[]
 
 include::{includedir}/inc/trade-post.adoc[]
 
+=== List Trades
+
+include::{includedir}/inc/trade-list.adoc[]
+
 === Get Trade
 
 include::{includedir}/inc/trade-get.adoc[]
