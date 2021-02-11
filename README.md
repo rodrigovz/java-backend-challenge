@@ -1,4 +1,3 @@
-# Back-end take home
 ## Overview
 This is a fictional Stock Trading API project.  
 
@@ -17,3 +16,6 @@ A trade includes the following properties:
 
 ### Running the project
     ./gradlew bootRun
+
+### Generating docs
+    ./gradlew asciidoc
