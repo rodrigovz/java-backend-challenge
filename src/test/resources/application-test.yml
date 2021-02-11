@@ -1,6 +1,24 @@
 # Core spring settings
+db:
+  name: test
+  schema: trade
+  port: 5435
 spring:
   profiles:
     active: test
   main:
     allow-bean-definition-overriding: true
+  datasource:
+    driverClassName: "org.postgresql.Driver"
+    url: jdbc:postgresql://localhost:${db.port}/${db.name}?currentSchema=${db.schema}
+    username: postgres
+    password:
+  flyway:
+    schemas:
+      - ${db.schema}
+    enabled: true
+    mixed: true
+
+# Logging settings
+logging.level.: INFO
+logging.level.com.altruist: INFO

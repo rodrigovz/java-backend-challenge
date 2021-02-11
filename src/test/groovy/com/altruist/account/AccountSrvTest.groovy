@@ -78,35 +78,25 @@ class AccountSrvTest extends Specification {
                 state: "CA",
                 zipcode: 99999
         )
-        UUID expectedAddressId = UUID.randomUUID()
+
         UUID expectedAccountId = UUID.randomUUID()
 
         when:
         srv.createAccount(account)
 
-        then: "the address is saved"
-        1 * mockAccountRepo.saveAddress(_) >> { Account arg ->
-            with(arg){
-                name == account.name
-                street == account.street
-                city == account.city
-                state == account.state
-                zipcode == account.zipcode as Integer
-            }
-
-            arg.address_uuid = expectedAddressId
-            arg
-        }
-
-        and: "the account is saved"
+        then: "the account and address are saved"
         1 * mockAccountRepo.save(_) >> { Account arg ->
             with(arg){
                 username == account.username
                 email == account.email
-                address_uuid == expectedAddressId
+                address.name == account.name
+                address.street == account.street
+                address.city == account.city
+                address.state.toString() == account.state
+                address.zipcode == account.zipcode as Integer
             }
 
-            arg.account_uuid = expectedAccountId
+            arg.accountUuid = expectedAccountId
             arg
         }
     }

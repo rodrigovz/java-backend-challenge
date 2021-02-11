@@ -1,0 +1,27 @@
+==== Requests Fields
+
+include::{snippets}/account/1.0.0/post-success/request-fields.adoc[]
+
+==== Request
+
+include::{snippets}/account/1.0.0/post-success/http-request.adoc[]
+
+==== Response Fields
+
+include::{snippets}/account/1.0.0/post-success/response-fields.adoc[]
+
+==== Success
+
+include::{snippets}/account/1.0.0/post-success/http-response.adoc[]
+
+==== Missing fields
+
+include::{snippets}/account/1.0.0/post-bad-requests/http-response.adoc[]
+
+==== Existing email
+
+include::{snippets}/account/1.0.0/post-conflict-existing-email/http-response.adoc[]
+
+==== Existing user
+
+include::{snippets}/account/1.0.0/post-conflict-existing-user/http-response.adoc[]

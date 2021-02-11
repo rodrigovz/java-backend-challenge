@@ -6,11 +6,13 @@ val apacheLangVersion: String by project
 plugins {
     groovy
     idea
+    java
     kotlin("jvm")
     kotlin("plugin.spring")
     id("org.springframework.boot")
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("org.flywaydb.flyway") version "6.5.5"
+    id("org.asciidoctor.convert") version "1.5.6"
 }
 
 group = "com.altruist"
@@ -33,6 +35,17 @@ configurations {
 tasks.withType(Test::class.java).all {
     this.include("**/*Test.*")
     this.exclude("**/*TestBase.*", "**/*IntegrationTest.*")
+}
+
+tasks.withType<org.asciidoctor.gradle.AsciidoctorTask>().configureEach {
+    setSourceDir(file("src/doc/asciidoc"))
+    setOutputDir(file("target/api-guide"))
+    attributes(
+        mapOf(
+            "snippets" to file("build/generated-snippets"),
+            "includedir" to file("src/doc/asciidoc")
+        )
+    )
 }
 
 tasks {
@@ -64,7 +77,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-hateoas")
-    implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.flywaydb:flyway-core")
     implementation("com.opentable.components:otj-pg-embedded:0.13.0")

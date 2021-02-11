@@ -1,0 +1,25 @@
+At the moment it's only possible to change status from "submitted" to "cancelled"
+
+==== Path Params
+
+include::{snippets}/trade/1.0.0/patch-success/path-parameters.adoc[]
+
+==== Requests Fields
+
+include::{snippets}/trade/1.0.0/patch-success/request-fields.adoc[]
+
+==== Request
+
+include::{snippets}/trade/1.0.0/patch-success/http-request.adoc[]
+
+==== Response Fields
+
+No Response Fields
+
+==== Success
+
+include::{snippets}/trade/1.0.0/patch-success/http-response.adoc[]
+
+==== Not Found
+
+include::{snippets}/trade/1.0.0/patch-not-found/http-response.adoc[]

@@ -1,0 +1,23 @@
+==== Path Params
+
+include::{snippets}/trade/1.0.0/list-success/path-parameters.adoc[]
+
+==== Request Params
+
+include::{snippets}/trade/1.0.0/list-success/request-parameters.adoc[]
+
+==== Request
+
+include::{snippets}/trade/1.0.0/list-success/http-request.adoc[]
+
+==== Response Fields
+
+include::{snippets}/trade/1.0.0/list-success/response-fields.adoc[]
+
+==== Success
+
+include::{snippets}/trade/1.0.0/list-success/http-response.adoc[]
+
+==== Not Found
+
+include::{snippets}/trade/1.0.0/list-accountId-not-found/http-response.adoc[]

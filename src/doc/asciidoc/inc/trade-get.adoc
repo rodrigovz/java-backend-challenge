@@ -1,0 +1,19 @@
+==== Path Params
+
+include::{snippets}/trade/1.0.0/get-success/path-parameters.adoc[]
+
+==== Request
+
+include::{snippets}/trade/1.0.0/get-success/http-request.adoc[]
+
+==== Response Fields
+
+include::{snippets}/trade/1.0.0/get-success/response-fields.adoc[]
+
+==== Success
+
+include::{snippets}/trade/1.0.0/get-success/http-response.adoc[]
+
+==== Not Found
+
+include::{snippets}/trade/1.0.0/get-tradeId-not-found/http-response.adoc[]

@@ -2,6 +2,7 @@ logs/*
 tmp
 **/build
 out/
+target/
 /.settings
 .DS_Store
 .DS_Store?

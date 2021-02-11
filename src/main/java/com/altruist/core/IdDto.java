@@ -1,4 +1,4 @@
-package com.altruist;
+package com.altruist.core;
 
 import java.util.UUID;
 import lombok.AllArgsConstructor;

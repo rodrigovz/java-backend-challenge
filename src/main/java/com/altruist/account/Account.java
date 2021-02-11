@@ -1,18 +1,23 @@
 package com.altruist.account;
 
-import java.util.UUID;
 import lombok.Data;
 
+import javax.persistence.*;
+import java.util.UUID;
+
 @Data
+@Entity
+@Table(name = "account", schema = "trade")
 public class Account {
 
-  public UUID account_uuid;
-  public UUID address_uuid;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  public UUID accountUuid;
+
   public String username;
   public String email;
-  public String name;
-  public String street;
-  public String city;
-  public String state;
-  public Integer zipcode;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "addressUuid", referencedColumnName = "addressUuid")
+  public Address address;
 }

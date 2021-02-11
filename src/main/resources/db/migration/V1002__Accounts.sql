@@ -1,0 +1,1 @@
+CREATE CAST (character varying as trade.state) WITH INOUT AS IMPLICIT;
